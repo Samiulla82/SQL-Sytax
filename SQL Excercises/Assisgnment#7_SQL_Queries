@@ -622,3 +622,194 @@ AND Salary < (SELECT(AVG(SALARY)) FROM programmer WHERE Sex LIKE 'F');
 80. Who are the female programmers earning more than the highest paid?
 
 SELECT pname FROM programmer WHERE Sex = 'F' AND Salary > (SELECT MAX(Salary) FROM programmer Where Sex = 'M' )
+
+
+
+81. Which language has been stated as the proficiency by most of the programmers?
+
+SELECT PROF1 FROM programmer GROUP BY PROF1 HAVING PROF1 = (SELECT MAX(PROF1) FROM programmer)
+union
+SELECT PROF2 FROM programmer GROUP BY PROF2 HAVING PROF2 = (SELECT MAX(PROF2) FROM programmer);
+
+
+
+
+82. Display the details of those who are drawing the same salary.
+
+
+SELECT * FROM programmer WHERE Salary in (SELECT Salary FROM programmer group By Salary  having count (Salary) > 1 ) order by Salary
+
+
+83. Display the details of the software developed by the male programmers earning more than 3000.
+
+SELECT * from programmer p,software s WHERE p.pname=s.pname and salary>3000 and Sex='m';
+
+
+
+84. Display the details of the packages developed in Pascal by the female programmers.
+
+SELECT s.* from programmer p,software s
+WHERE p.pname=s.pname and Sex='f' and Developin ='pascal';
+
+
+85. Display the details of the programmers who joined before 1990.
+
+SELECT pname, DOJ FROM programmer WHERE Year(DOJ) < 1990
+
+
+
+
+86. Display the details of the software developed in C by the female programmers at Pragathi.
+
+SELECT s.* FROM software s,studies st,programmer p WHERE s.pname=st.pname and p.pname=s.pname and Sex='f' and institute='pragathi';
+
+
+87. Display the number of packages, number of copies sold and sales value of each programmer institute wise.
+
+SELECT studies.institute, COUNT(software.developin) AS developin, COUNT(software.sold) As Sold, SUM(software.sold*software.scost) AS sales FROM software,studies
+WHERE software.pname =studies.pname GROUP BY studies.institute;
+
+
+
+88. Display the details of the software developed in dBase by male programmers who belong to the institute in which the most number of programmers studied.
+
+CREATE TABLE INST (INS VARCHAR(20), CNT INT)
+
+INSERT INTO INST
+SELECT INSTITUTE, COUNT(PNAME) FROM studies GROUP BY INSTITUTE
+
+SELECT distinct SW.* FROM software AS SW, programmer AS PG, Studies AS ST, INST
+WHERE Developin='DBASE' AND Sex='M' AND SW.PNAME = PG.PNAME 
+AND INSTITUTE = INS AND CNT= (SELECT MAX(CNT) FROM INST)
+
+
+
+
+89. Display the details of the software developed by the male programmers 
+born before 1965 and female programmers born after 1975.
+
+SELECT S.*, YEAR(DOB), Sex FROM Programmer p,Software s 
+WHERE s.PNAME=p.PNAME AND 
+((Sex='M' AND YEAR(DOB)<1965) OR (Sex='F' AND YEAR(DOB)>1975))
+
+
+
+90. Display the details of the software that has been developed in the 
+language which is neither the first nor the second proficiency of the programmers.
+
+SELECT s.* FROM programmer p,software s WHERE s.pname=p.pname AND (developin <> prof1 and developin <> prof2);
+
+
+
+
+91. Display the details of the software developed by the male students at Sabhari.
+
+SELECT s.* FROM software s,studies st,programmer p 
+WHERE s.pname=st.pname and p.pname=s.pname and Sex='M' and institute='Sabhari';
+
+
+
+
+92. Display the names of the programmers who have not developed any packages.
+
+ SELECT pname  FROM programmer WHERE pname NOT IN (SELECT Pname FROM software)
+
+
+
+
+93. What is the total cost of the software developed by the programmers of Apple?
+
+SELECT sum(scost) FROM software s,studies st
+WHERE s.pname=st.pname AND institute='apple';
+
+94. Who are the programmers who joined on the same day?
+
+
+SELECT Distinct a.pname,a.doj FROM programmer a,programmer b
+WHERE a.doj=b.doj and a.pname <> b.pname order by DOJ;
+
+
+95. Who are the programmers who have the same Prof2?
+
+SELECT Distinct(a.pname),a.prof2 FROM programmer a,programmer b
+WHERE a.prof2=b.prof2 and a.pname <> b.pname order by prof2;
+
+
+96. Display the total sales value of the software institute wise.
+
+SELECT studies.institute, SUM(software.sold*software.scost) FROM software,studies
+WHERE studies.pname=software.pname GROUP BY studies.institute;
+
+
+
+
+97. In which institute does the person who developed the costliest package study?
+
+SELECT institute FROM software st,studies s
+WHERE s.pname=st.pname GROUP BY institute,dcost having dcost=(SELECT max(dcost) FROM software);
+
+
+98. Which language listed in Prof1, Prof2 has not been used to develop any package?
+
+SELECT prof1 FROM programmer WHERE prof1 not in(SELECT developin FROM software) 
+UNION
+SELECT prof2 FROM programmer WHERE prof2 not in(SELECT developin FROM software);
+
+
+
+99. How much does the person who developed the highest selling package earn and what course did he/she undergo?
+
+SELECT p1.salary,s2.course FROM programmer p1,software s1,studies s2
+WHERE p1.pname=s1.pname and s1.pname=s2.pname and scost=(SELECT max(scost) FROM software);
+
+
+100. What is the average salary for those whose software sales is more than 50,000?
+
+SELECT avg(salary) Avg_Salary_Progmer FROM programmer p,software s
+WHERE p .pname=s.pname AND sold*scost>50000;
+
+
+101. How many packages were developed by students who studied in institutes that charge the lowest course fee?
+
+SELECT s.pname, count(title) AS packages FROM software s,studies st
+WHERE s.pname=st.pname GROUP BY s.pname,coursefee having min(coursefee)=(SELECT MIN(coursefee) FROM studies);
+
+
+102. How many packages were developed by the person who developed the cheapest package? Where did he/she study?
+
+SELECT count(developin) No_of_Pckgs FROM programmer p,software s
+WHERE s .pname=p.pname GROUP BY developin having min(dcost)=(SELECT min(dcost) FROM software);
+
+
+
+103. How many packages were developed by female programmers earning more than the highest paid male programmer?
+
+SELECT count(developin) No_of_Pckgs FROM programmer p,software s
+WHERE s.pname=p.pname and Sex='f' and salary>(SELECT max(salary) FROM programmer p,software s
+WHERE s.pname=p.pname and Sex='m');
+
+
+104. How many packages are developed by the most experienced programmers from BDPS?
+
+SELECT count(*) No_of_Pckgs FROM software s,programmer p
+WHERE p.pname=s.pname GROUP BY doj having min(doj)=(select min(doj)
+FROM studies st,programmer p, software s
+WHERE p.pname=s.pname AND st.pname=p.pname AND (institute='BDPS'));
+
+
+105. List the programmers (FROM the software table) and the institutes they studied at.
+
+SELECT pname,institute FROM studies
+WHERE pname not in(SELECT pname FROM software);
+
+
+106. List each PROF with the number of programmers having that PROF and the number of the packages in that PROF.
+
+
+SELECT count(*)No_of_programmers, SUM(scost*sold-dcost) "PROFIT" FROM software
+WHERE developin IN (SELECT prof1 FROM programmer) GROUP BY developin;
+
+107. List the programmer names (FROM the programmer table) and the number of packages each has developed.
+
+SELECT s.pname,count(developin) FROM programmer p1,software s
+WHERE p1.pname=s.pname GROUP BY s.pname;
