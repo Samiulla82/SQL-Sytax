@@ -1,14 +1,4 @@
 
-
-use Assignment_7
-
---Problem Statement:
-
-SELECT * FROM STUDIES;
-SELECT * FROM SOFTWARE;
-SELECT * FROM PROGRAMMER;
-
-
 create table STUDIES (
 	PNAME VARCHAR(35),
     INSTITUTE VARCHAR(45),
@@ -45,13 +35,6 @@ CREATE TABLE PROGRAMMER(
 INSERT INTO PROGRAMMER (PNAME,DOB,DOJ,SEX,PROF1,PROF2,SALARY) VALUES ('ANAND','1966-04-12','1992-04-21','M','PASCAL','BASIC',3200),('ALTAF','1964-07-02','1990-11-13','M','CLIPPER','COBOL',2800),('JULIANA','1960-01-13','1990-04-21','F','COBOL','DBASE',3000),('KAMALA','1968-10-30','1992-01-02','F','C','DBASE',2900),('MARY','1970-06-24','1991-02-01','F','CPP','ORACLE',4500),
 ('NELSON','1985-09-11','1989-03-11','M','COBOL','DBASE',2500),('PATTRICK','1965-11-10','1990-04-21','M','PASCAL',NULL,2800),('QADIR','1965-08-31','1990-04-21','M','ASSEMBLY','C',3000),('RAMESH','1967-05-03','1991-02-26','M','PASCAL','DBASE',3200),('REBECCA','1997-01-01','1990-12-01','F','BASIC','COBOL',2500),
 ('REMITHA','1970-04-19','1993-04-20','F','C','ASSEMBLY',3000),('REVATHI','1969-12-02','1992-01-02','F','PASCAL','BASIC',3200),('VIJAYA','1965-12-14','1992-05-02','F','FOXPRO','C',4500);
-
-1. Find out the selling cost average for packages developed in Pascal.
-2. Display the names and ages of all programmers.
-3. Display the names of those who have done the DAP Course.
-4. Display the names and date of birth of all programmers born in January.
-5. What is the highest number of copies sold by a package?
-6. Display lowest course fee.
 
 
 --Tasks To Be Performed:
