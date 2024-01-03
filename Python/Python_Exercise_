@@ -1,0 +1,9 @@
+# Write a Python function to find the maximum of three numbers.
+
+def max_num(x,y,z):
+  if x>y:
+    print(x,'is max number')
+  elif y>z:
+    print(y,'is max number')
+  else:
+    print(z,'is max number')
