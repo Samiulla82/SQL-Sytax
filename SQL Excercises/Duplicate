@@ -1,0 +1,20 @@
+How to find Duplicate and remove Duplicate values from table. 
+
+CREATE TABLE [customer3](
+ [id] [int] IDENTITY(1,1) NOT NULL,
+ [name] [varchar](20) NULL,
+ [place] [varchar](30) NULL,
+ [gender] [char](10) NULL,
+ [salary] [int] NULL
+) 
+------------------------------------------------------------------
+insert into customer3 values('sunny', 'noida', 'male', 1000)
+insert into customer3 values('rahul', 'delhi', 'male', 2000)
+insert into customer3 values('mahesh', 'goa', 'male', 3000)
+insert into customer3 values('suresh', 'USA', 'male', 4000)
+insert into customer3 values('sunny', 'noida', 'male', 1000)
+
+SELECT * FROM [customer3]
+
+SELECT  name, place, gender, count(*) FROM customer3
+Group By name, place, gender
